@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">GuardianNewsfeed</string>
+    <string name="article_title_example">\'Deny, distract and blame\':
+        how Russia fights propaganda war</string>
+    <string name="author_example">Author name not available</string>
+    <string name="date_example">2018–05–04</string>
+    <string name="time_example">17:50</string>
+    <string name="section_example">UK news</string>
+    <string name="no_stories">No news found.\n
+        Please wait until something happens in the world!</string>
+    <string name="no_internet">No Internet connection.</string>
+</resources>

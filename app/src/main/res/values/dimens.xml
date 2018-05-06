@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="default_list_item_margin">16dp</dimen>
+    <dimen name="right_column_size">72dp</dimen>
+    <dimen name="mid_column_margin">8dp</dimen>
+</resources>
