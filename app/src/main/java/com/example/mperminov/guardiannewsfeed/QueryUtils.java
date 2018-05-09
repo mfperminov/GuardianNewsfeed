@@ -72,12 +72,12 @@ public final class QueryUtils {
                     // newline for nice formatting in layout
                     String dateFormatted = date.substring(0,10) + "\n"
                             + date.substring(11,16);
-                    //looking for author name in references
-                    JSONArray references = result.getJSONArray("references");
-                    if (references != null && references.length() > 0) {
-                        JSONObject reference = references.getJSONObject(0);
-                        String id = reference.getString("id");
-                        stories.add(new Story(title,section,url,dateFormatted,authorFormat(id)));
+                    //looking for author name in tags
+                    JSONArray tags = result.getJSONArray("tags");
+                    if (tags != null && tags.length() > 0) {
+                        JSONObject tag = tags.getJSONObject(0);
+                        String id = tag.getString("webTitle");
+                        stories.add(new Story(title,section,url,dateFormatted,id));
                     } else {
                         //Create Story java object from title, section name
                         //url, time and add story to list of stories
@@ -182,12 +182,6 @@ public final class QueryUtils {
         // Extract relevant fields from the JSON response, create a list of {@link Story}ies
         // and return it;
         return extractStoryData(jsonResponse);
-    }
-    private static String authorFormat(String s){
-        String s1 = s.substring(7,s.length());
-        s1 = s1.replace("-"," ");
-        s1 = WordUtils.capitalize(s1);
-        return s1;
     }
 
 }

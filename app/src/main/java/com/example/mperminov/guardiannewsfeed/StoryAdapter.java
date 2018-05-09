@@ -17,17 +17,17 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
     private List<Story> mDataset;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mArticleTitle;
-        public TextView mSection;
-        public TextView mAuthor;
-        public TextView mDate;
+        public TextView mArticleTitleTextView;
+        public TextView mSectionTextView;
+        public TextView mAuthorTextView;
+        public TextView mDateTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mArticleTitle = itemView.findViewById(R.id.article_title);
-            mSection = itemView.findViewById(R.id.section);
-            mAuthor = itemView.findViewById(R.id.author);
-            mDate = itemView.findViewById(R.id.date);
+            mArticleTitleTextView = itemView.findViewById(R.id.article_title);
+            mSectionTextView = itemView.findViewById(R.id.section);
+            mAuthorTextView = itemView.findViewById(R.id.author);
+            mDateTextView = itemView.findViewById(R.id.date);
         }
     }
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -51,16 +51,16 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mArticleTitle.setText(mDataset.get(position).getmArticleTitle());
-        holder.mSection.setText(mDataset.get(position).getmSection());
+        holder.mArticleTitleTextView.setText(mDataset.get(position).getmArticleTitle());
+        holder.mSectionTextView.setText(mDataset.get(position).getmSection());
         //author value often will be empty
         if (TextUtils.isEmpty(mDataset.get(position).getmAuthor())) {
-            holder.mAuthor.setVisibility(View.INVISIBLE);
+            holder.mAuthorTextView.setVisibility(View.INVISIBLE);
         } else {
-            holder.mAuthor.setVisibility(View.VISIBLE);
-            holder.mAuthor.setText(mDataset.get(position).getmAuthor());
+            holder.mAuthorTextView.setVisibility(View.VISIBLE);
+            holder.mAuthorTextView.setText(mDataset.get(position).getmAuthor());
         }
-        holder.mDate.setText(mDataset.get(position).getmDate());
+        holder.mDateTextView.setText(mDataset.get(position).getmDate());
     }
 
     // Return the size of Story list (invoked by the layout manager)

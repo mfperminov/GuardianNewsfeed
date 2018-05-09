@@ -37,14 +37,14 @@ public class MainActivity extends AppCompatActivity
     search topic - Russia
      */
     private static final String GUARD_URL = "http://content.guardianapis.com/search?order-by=newest" +
-            "&show-references=author&q=Russia&api-key=" + API_KEY;
+            "&show-tags=contributor&q=Russia&api-key=" + API_KEY;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRecyclerView = findViewById(R.id.recycler);
+        mRecyclerView = findViewById(R.id.news_recycler_view);
         // improve performance because changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
