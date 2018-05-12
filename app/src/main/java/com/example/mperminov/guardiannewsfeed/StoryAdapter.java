@@ -1,5 +1,7 @@
 package com.example.mperminov.guardiannewsfeed;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> {
     private List<Story> mDataset;
+    private Boolean showAuthor;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mArticleTitleTextView;
@@ -43,6 +46,8 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.story_item, parent, false);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(parent.getContext());
+        showAuthor = pref.getBoolean("author", false);
         return new ViewHolder(v);
     }
 
@@ -53,8 +58,8 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
         // - replace the contents of the view with that element
         holder.mArticleTitleTextView.setText(mDataset.get(position).getmArticleTitle());
         holder.mSectionTextView.setText(mDataset.get(position).getmSection());
-        //author value often will be empty
-        if (TextUtils.isEmpty(mDataset.get(position).getmAuthor())) {
+        //author value can be empty
+        if (TextUtils.isEmpty(mDataset.get(position).getmAuthor()) || !showAuthor) {
             holder.mAuthorTextView.setVisibility(View.INVISIBLE);
         } else {
             holder.mAuthorTextView.setVisibility(View.VISIBLE);

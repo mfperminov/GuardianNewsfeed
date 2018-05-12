@@ -4,18 +4,23 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -36,8 +41,7 @@ public class MainActivity extends AppCompatActivity
       but it is required to include them if they are present.")
     search topic - Russia
      */
-    private static final String GUARD_URL = "http://content.guardianapis.com/search?order-by=newest" +
-            "&show-tags=contributor&q=Russia&api-key=" + API_KEY;
+    private static final String GUARD_URL = "http://content.guardianapis.com/search";
 
 
     @Override
@@ -84,7 +88,32 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<List<Story>> onCreateLoader(int id, Bundle args) {
-        return new StoryLoader(this, GUARD_URL);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // getString retrieves a String value from the preferences. The second parameter
+        // is the default value for this preference.
+        String topic = sharedPrefs.getString(
+                getString(R.string.settings_topic_key),
+                getString(R.string.settings_topic_default));
+        String orderBy = sharedPrefs.getString(getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default));
+        String newsFrom = sharedPrefs.getString(getString(R.string.settings_date_from_key),
+                setDefaultDate());
+        // parse breaks apart the URI string that's passed into its parameter
+        Uri baseUri = Uri.parse(GUARD_URL);
+        // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+        // Append query parameter and its value. Keys for settings and parameters
+        // in query are the same
+        uriBuilder.appendQueryParameter(getString(R.string.settings_api_key_key), API_KEY);
+        uriBuilder.appendQueryParameter(getString(R.string.settings_topic_key), topic);
+        uriBuilder.appendQueryParameter(getString(R.string.settings_order_by_key), orderBy);
+        uriBuilder.appendQueryParameter(getString(R.string.settings_tags_key),
+                getString(R.string.settings_tags_value));
+        uriBuilder.appendQueryParameter(getString(R.string.settings_date_from_key), newsFrom);
+        // Return the completed uri e.g. http://content.guardianapis.com/search?
+        // api-key=accc44ab-55e4-4a73-9006-45b77fb32516&q=usa&order-by=newest&
+        // show-tags=contributor&from-date=2018-05-11
+        return new StoryLoader(this, uriBuilder.toString());
     }
 
     @Override
@@ -123,5 +152,36 @@ public class MainActivity extends AppCompatActivity
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //method for setting default value of date in app
+    //use boolean key switcher for different data picker
+    public String setDefaultDate() {
+        String dateString;
+        //how many days from show news
+        //minus for subtraction in method
+        final int DAYS_AGO = -3;
+        final Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, DAYS_AGO);
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        dateString = String.format("%d-%02d-%02d", year, month + 1, day);
+        return dateString;
+    }
 }
